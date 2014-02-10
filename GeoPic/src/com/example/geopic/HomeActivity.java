@@ -1,18 +1,24 @@
 package com.example.geopic;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class HomeActivity extends Activity {
@@ -22,6 +28,8 @@ public class HomeActivity extends Activity {
 
 	final static int CAMERA = 1;
 	final static int GALLERY = 2;
+	
+	String mCurrentPhotoPath;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -37,8 +45,6 @@ public class HomeActivity extends Activity {
 		// Get the message from the intent
 		Intent intent = getIntent();
 		
-		
-
 	}
 
 	private void setupActionBar() {
@@ -49,7 +55,7 @@ public class HomeActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.setting_menu, menu);
 		return true;
 	}
 
@@ -69,12 +75,30 @@ public class HomeActivity extends Activity {
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 		}
+		
+//		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//			File photoFile = null;
+//			try {
+//	            photoFile = createImageFile();
+//	        } catch (IOException ex) {
+//	            // Error occurred while creating the File
+//	           ex.printStackTrace();
+//	        }
+//			
+//			if (photoFile != null) {
+//	            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+//	            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//	        }
+//		}
 	}
 
 	public void pickPic(View view){
-
-		Intent choosePictureIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		startActivityForResult(choosePictureIntent, GALLERY_REQUEST_CODE);
+		
+		Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
 
 	}
 
@@ -107,6 +131,9 @@ public class HomeActivity extends Activity {
 			// Deal with the result from the selected Gallery App	
 			case GALLERY_REQUEST_CODE:
 				if(resultCode == RESULT_OK){
+					
+					Uri selectedImageUri = data.getData();
+					intent.putExtra("imageUri", selectedImageUri);
 					intent.putExtra("type", GALLERY);
 					startActivity(intent);
 					
@@ -118,4 +145,23 @@ public class HomeActivity extends Activity {
 				break;
 		}
 	}
+	
+	private File createImageFile() throws IOException {
+	    // Create an image file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    String imageFileName = "JPEG_" + timeStamp + "_";
+	    File storageDir = Environment.getExternalStoragePublicDirectory(
+	            Environment.DIRECTORY_PICTURES);
+	    File image = File.createTempFile(
+	        imageFileName,  /* prefix */
+	        ".jpg",         /* suffix */
+	        storageDir      /* directory */
+	    );
+
+	    // Save a file: path for use with ACTION_VIEW intents
+	    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+	    return image;
+	}
+	
+	
 }

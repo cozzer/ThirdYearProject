@@ -54,6 +54,7 @@
         android:layout_alignLeft="@+id/useLocation"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
+        android:onClick="cancel"
         android:text="Cancel" />
 
     <Button
@@ -63,6 +64,7 @@
         android:layout_above="@+id/cancel"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="27dp"
+        android:onClick="sendPhoto"
         android:text="Use Location" />
 
 </RelativeLayout>

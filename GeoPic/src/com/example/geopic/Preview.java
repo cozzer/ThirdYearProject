@@ -1,10 +1,19 @@
 package com.example.geopic;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 public class Preview extends Activity {
-	
+
 	final static int CAMERA = 1;
 	final static int GALLERY = 2;
 
@@ -23,32 +32,61 @@ public class Preview extends Activity {
 		setContentView(R.layout.activity_preview);
 		System.out.println("TRYING TO CREATE");
 		Intent intent = getIntent();
-		
+
 		ImageView imagePreview = (ImageView) findViewById(R.id.imageThumbNail);
 		Button button1 = (Button) findViewById(R.id.redoBtn);
-		
+
 		int switchCase = intent.getIntExtra("type", 0);
 		switch(switchCase){
-		
-			case CAMERA:
-				System.out.println("CAMERA");
-				Bitmap imageBitmap = intent.getParcelableExtra("bitmap");
-				imagePreview.setImageBitmap(imageBitmap);
-			
-				button1.setText("Retake Photo");
-				break;
+
+		case CAMERA:
+			System.out.println("CAMERA");
+			Bitmap imageBitmap = intent.getParcelableExtra("bitmap");
+			imagePreview.setImageBitmap(imageBitmap);
+
+			button1.setText("Retake Photo");
+			break;
+
+
+		case GALLERY:
+			System.out.println("GALLERY");
+			Uri imageUri = intent.getParcelableExtra("imageUri");
+			if(Build.VERSION.SDK_INT < 19){
+				
+				String[] filePathColumn = {MediaStore.Images.Media.DATA};
+				Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
+				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				cursor.moveToFirst();
+				String resolverImagePath = cursor.getString(columnIndex);
+				
+				Bitmap selectedImage = BitmapFactory.decodeFile(resolverImagePath);
+				imagePreview.setImageBitmap(selectedImage);
+
 				
 
-			case GALLERY:
-				System.out.println("GALLERY");
-				Uri imageUri = intent.getParcelableExtra("imageUri");
-				imagePreview.setImageURI(imageUri);
-				button1.setText("Select Other");
-				break;
-				
-			default:
-				System.out.println("Nothing happened");
-				break;
+			}else {
+
+				ParcelFileDescriptor parcelFileDescriptor;
+				try {
+					parcelFileDescriptor = getContentResolver().openFileDescriptor(imageUri, "r");
+					FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+					Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+					parcelFileDescriptor.close();
+					imagePreview.setImageBitmap(image);
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			button1.setText("Select Other");
+			break;
+
+		default:
+			System.out.println("Nothing happened");
+			break;
 		}
 	}
 
@@ -56,7 +94,7 @@ public class Preview extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.preview, menu);
+		getMenuInflater().inflate(R.menu.setting_menu, menu);
 		return true;
 	}
 
@@ -76,9 +114,9 @@ public class Preview extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void chooseLocation(View view){
-		
+
 		Intent intent = new Intent(this, LocationActivity.class);
 		startActivity(intent);
 	}
