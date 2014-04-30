@@ -11,19 +11,19 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
-    
+
     <application
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo" >
-        <activity
-            android:name="com.example.geopic.LoginActivity"
-            android:label="@string/app_name" >
+        <activity android:name="com.example.geopic.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +32,7 @@
         </activity>
         <activity
             android:name="com.example.geopic.HomeActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/app_name"
             android:parentActivityName="com.example.geopic" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name="com.example.geopic.Preview"
-            android:label="@string/title_activity_preview"
+            android:label="@string/app_name"
             android:parentActivityName="com.example.geopic.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -48,15 +48,25 @@
         </activity>
         <activity
             android:name="com.example.geopic.RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.example.geopic.LocationActivity"
-            android:label="@string/title_activity_location" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.example.geopic.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.example.geopic.FullImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_full_image"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity
+            android:name="com.example.geopic.ImageActivity"
+            android:label="@string/title_activity_image" >
         </activity>
     </application>
 

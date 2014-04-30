@@ -40,7 +40,7 @@
         android:text="@string/var_login" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginBtn"
@@ -48,8 +48,9 @@
         android:layout_marginTop="34dp"
         android:clickable="true"
         android:onClick="loginRegister"
-        android:text="New to... Register here"
+        android:text="New to GeoPic? Register here!"
         android:textAlignment="center"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#8B8B8B" />
 

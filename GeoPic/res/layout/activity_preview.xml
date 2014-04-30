@@ -8,55 +8,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Preview" >
 
-    <TableLayout
+    <ImageView
+        android:id="@+id/previewImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/previewImage"
+        android:layout_alignParentBottom="true"
         android:stretchColumns="*" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:id="@+id/imageThumbNail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="126dp"
-                android:contentDescription="Image preview"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/picture_frame" />
-
-        </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:gravity="bottom" >
 
-            <LinearLayout
+            <Button
+                android:id="@+id/redoBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:text="@string/retake" />
 
-                <Button
-                    android:id="@+id/redoBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/retake" />
-
-                <Button
-                    android:id="@+id/cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="chooseLocation"
-                    android:text="@string/upload" />
-
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="chooseLocation"
+                android:text="@string/upload" />
         </TableRow>
-
     </TableLayout>
 
 </RelativeLayout>
